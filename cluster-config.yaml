@@ -10,8 +10,13 @@ hostAliases: # /etc/hosts style entries to be injected into /etc/hosts in the no
   - ip: 1.1.1.1
     hostnames:
       - cloud.flare.dns
+kubeAPI: # same as `--api-port 0.0.0.:6443`
+  hostPort: "6443" # where the Kubernetes API listening port will be mapped to on your host system
 ports:
-  - port: 9090:80 # same as `--port '9090:80@loadbalancer'`
+  - port: 9080:80 # same as `--port '9090:80@loadbalancer'`
+    nodeFilters:
+      - loadbalancer
+  - port: 9443:443 # same as `--port '9443:443@loadbalancer'`
     nodeFilters:
       - loadbalancer
 options:
@@ -23,9 +28,9 @@ options:
     disableRollback: false # same as `--no-Rollback`
   k3s: # options passed on to K3s itself
     extraArgs: # additional arguments passed to the `k3s server|agent` command; same as `--k3s-arg`
-      - arg: --disable=traefik
-        nodeFilters:
-          - server:*
+#      - arg: --disable=traefik
+#        nodeFilters:
+#          - server:*
       - arg: --kube-apiserver-arg=default-not-ready-toleration-seconds=30
         nodeFilters:
           - server:*
