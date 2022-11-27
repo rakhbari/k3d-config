@@ -1,0 +1,26 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: ${APP_NAME}-stripprefix
+spec:
+  stripPrefix:
+    prefixes:
+      - /${APP_NAME}
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ${APP_NAME}
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`mainserv03.lan`) && PathPrefix(`/${APP_NAME}`)
+      kind: Rule
+      services:
+        - name: ${APP_NAME}
+          port: 80
+      middlewares:
+        - name: ${APP_NAME}-stripprefix

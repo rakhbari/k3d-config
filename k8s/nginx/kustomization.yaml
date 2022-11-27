@@ -1,0 +1,7 @@
+namespace: nginx
+configMapGenerator:
+- name: nginx-index-file
+  files:
+  - index.html
+resources:
+  - deployment.yaml
