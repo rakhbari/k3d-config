@@ -1,5 +1,27 @@
 #!/bin/bash
 
-kubectl create namespace nginx
-kubectl create deployment nginx -n nginx --image=nginx
-kubectl expose deployment nginx --port=80 --type=LoadBalancer -n nginx
+usage() {
+  echo ""
+  echo "Usage: ${0} <app_name>"
+  echo "Example: ${0} nginx-1"
+  exit 1
+}
+
+export APP_NAME=$1
+export NAMESPACE=nginx
+
+if [ -z "${APP_NAME}" ]
+then
+  echo "ERROR: APP_NAME required."
+  usage
+fi
+
+echo ""
+echo "===> Creating namespace ${NAMESPACE} (if it doesn't exist) ..."
+kubectl get ns | grep -q "^${NAMESPACE} " || kubectl create ns ${NAMESPACE}
+
+echo ""
+echo "===> Deploying nginx \"${APP_NAME}\" in namespace \"${NAMESPACE}\" ..."
+envsubst < k8s/nginx/deployment.yaml | kubectl apply -n ${NAMESPACE} -f -
+envsubst < k8s/nginx/service.yaml | kubectl apply -n ${NAMESPACE} -f -
+envsubst < k8s/nginx/ingress.yaml | kubectl apply -n ${NAMESPACE} -f -
