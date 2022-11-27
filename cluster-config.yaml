@@ -10,11 +10,15 @@ hostAliases: # /etc/hosts style entries to be injected into /etc/hosts in the no
   - ip: 1.1.1.1
     hostnames:
       - cloud.flare.dns
+ports:
+  - port: 9090:80 # same as `--port '9090:80@loadbalancer'`
+    nodeFilters:
+      - loadbalancer
 options:
   k3d: # k3d runtime settings
     wait: true # wait for cluster to be usable before returining; same as `--wait` (default: true)
     timeout: "60s" # wait timeout before aborting; same as `--timeout 60s`
-    disableLoadbalancer: true # same as `--no-lb`
+    disableLoadbalancer: false # same as `--no-lb`
     disableImageVolume: false # same as `--no-image-volume`
     disableRollback: false # same as `--no-Rollback`
   k3s: # options passed on to K3s itself
