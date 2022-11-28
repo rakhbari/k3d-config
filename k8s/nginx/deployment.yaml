@@ -22,7 +22,7 @@ spec:
   selector:
     matchLabels:
       app: ${APP_NAME}
-  replicas: 1 
+  replicas: 1
   template:
     metadata:
       labels:
@@ -36,6 +36,13 @@ spec:
           volumeMounts:
             - name: nginx-index-file
               mountPath: /usr/share/nginx/html/
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+            requests:
+              memory: 256Mi
+              cpu: "0.2"
       volumes:
         - name: nginx-index-file
           configMap:
