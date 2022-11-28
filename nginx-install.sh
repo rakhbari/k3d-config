@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if ! command -v envsubst &> /dev/null
+then
+  echo "ERROR: envsubst isn't installed/can't be found. Get it installed on your machine before proceeding. https://www.google.com/search?q=envsubst+command+not+found"
+  exit 2
+fi
+
 usage() {
   echo ""
   echo "Usage: ${0} <app_name>"
