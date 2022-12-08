@@ -1,0 +1,14 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: akhbari-us-production
+  namespace: nginx
+spec:
+  secretName: akhbari-us-production
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "*.akhbari.us"
+  dnsNames:
+  - "*.akhbari.us"
