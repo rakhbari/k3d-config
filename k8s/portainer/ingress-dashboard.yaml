@@ -1,0 +1,20 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: portainer-dashboard
+  namespace: portainer
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`portainer.akhbari.us`)
+      kind: Rule
+      services:
+        - name: portainer
+          port: 9000
+    - match: Host(`portainer.lan`)
+      kind: Rule
+      services:
+        - name: portainer
+          port: 9000
