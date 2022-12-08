@@ -15,7 +15,7 @@ metadata:
   name: ${APP_NAME}
 spec:
   entryPoints:
-    - web
+    - websecure
   routes:
     - match: Host(`mainserv03.lan`) && PathPrefix(`/${APP_NAME}`)
       kind: Rule
@@ -24,3 +24,10 @@ spec:
           port: 80
       middlewares:
         - name: ${APP_NAME}-stripprefix
+    - match: Host(`${APP_NAME}.akhbari.us`)
+      kind: Rule
+      services:
+        - name: ${APP_NAME}
+          port: 80
+  tls:
+    secretName: akhbari-us-staging
