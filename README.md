@@ -56,18 +56,42 @@ ingressroute.traefik.containo.us/nginx-1
 If everything goes well, you should be able to hit your bare metal hostname (or IP address) with `<hostname-or-ip>:9080/nginx-1` and see a dead simple `index.html` page that simply identifies the `<nginx-id>` you enered earlier. Nothing fancy, just an easy test page to show that you can create multiple services & ingress-routes that are externally accessible from anywhere in your network.
 
 ## Traefik Dashboard
-To enable the Traefik dashboard you simply need to do:
-1. Define a `traefik.lan` host in your `hosts` file to point to the same IP address as the k3d bare metal host
-1. Apply the `k8s/traefik/ingress-dashboard.yaml`
 
-If that worked (no errors) you should be able to hit: http://traefik.lan:9080/dashboard/ to see the Traefik dashboard
+### Dashboard Auth
+Create an encrypted `userId:password` using `htpasswd` stored in `/tmp/auth-string`:
+```
+htpasswd -nB ramin | tee /tmp/auth-string
+```
+
+Create a `Secret` from the contents of `/tmp/auth-string`:
+```
+kubectl create secret generic -n kube-system traefik-dashboard-auth \
+  --from-file=users=/tmp/auth-string -o yaml --dry-run=client | tee k8s/traefik/secret-dashboard-auth.yaml
+```
+
+Apply the `Secret` and `IngressRoute` to your cluster:
+```
+kubectl apply -f k8s/traefik/secret-dashboard-auth.yaml -f k8s/traefik/ingress-dashboard.yaml
+```
+
+Traefik's `IngressRoute` has 2 routes defined in it:
+1. `traefik.lan`
+1. `traefik.yourdomain.us`
+
+For `traefik.lan` you'll need to define a `traefik.lan` host in your `hosts` file to point to the same IP address as the k3d bare metal host.
+If that worked (no errors) you should be able to hit: https://traefik.lan:9443/dashboard/ to see the Traefik dashboard
+
+For `traefik.yourdomain.us` (or your own domain name) an HTTP Basic Auth `MiddleWare` has been defined with the above created password. So when you hit that endpoint, you'll be prompted for the UserID/Password you created earlier.
 
 ## Portainer Dashboard
 To enable the Portainer dashboard you simply need to do:
 1. Define a `portainer.lan` host in your `hosts` file to point to the same IP address as the k3d bare metal host
-1. Apply the `k8s/portainer-cip.yaml` (`cip` is just an indicator that this YAML spec bundle contains a `ClusterIP` service)
+1. Apply the `k8s/portainer/portainer-cip.yaml` (`cip` is just an indicator that this YAML spec bundle contains a `ClusterIP` service)
+1. Apply the `k8s/portainer/ingress-dashboard.yaml`
 
-If that worked (no errors) you should be able to hit: http://portainer.lan:9080/ to see the Portainer dashboard. You'll be asked to creae an `admin` account and enter a password.
+If that worked (no errors) you should be able to hit: https://portainer.lan:9443/ to see the Portainer dashboard. You'll be asked to create an `admin` account and enter a password.
+
+Much like the Traefik `IngressRoute`, this one also has your own `yourdomain.us` route as well.
 
 ## Acknowledgements
 Aside from major kudos to the folks at Rancher for developing and releasing to OSS their awesome K3D, I also wanted to acknowledge a couple of folks whose YouTube channels and online articles really helped point me in the right direction to get things set up no my measely 1-server machine at home.
