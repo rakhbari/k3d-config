@@ -30,4 +30,4 @@ spec:
         - name: ${APP_NAME}
           port: 80
   tls:
-    secretName: akhbari-us-staging
+    secretName: akhbari-us-production
