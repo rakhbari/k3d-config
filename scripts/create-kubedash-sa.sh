@@ -19,8 +19,10 @@ createSA() {
   echo ""
   echo "===> Creating SA ${SERVICE_ACCT} in namespace ${NAMESPACE} ..."
   kubectl create sa ${SERVICE_ACCT} -n ${NAMESPACE}
-  envsubst < secret-service-acct-token.yaml | kubectl apply -f -
+  envsubst < ${SCRIPT_DIR}/../secret-service-acct-token.yaml | kubectl apply -f -
 }
+
+SCRIPT_DIR=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
 
 if [ -z "${NAMESPACE}" ] || [ -z "${SERVICE_ACCT}" ]
 then
@@ -39,11 +41,10 @@ test $? -eq 0 || createSA
 echo ""
 echo "===> Creating ClusterRoles (if they don't exist) ..."
 kubectl get clusterrole kube-dash-extras > /dev/null 2>&1
-test $? -eq 0 || kubectl apply -f clusterroles-kube-dash-extras.yaml
+test $? -eq 0 || kubectl apply -f ${SCRIPT_DIR}/../kube-dashboard/clusterroles-kube-dash-extras.yaml
 
 echo ""
-echo "===> Applying rolebinding-workflow.yaml in namespace ${NAMESPACE} ..."
-envsubst < rolebinding-kubedash.yaml | kubectl apply -n ${NAMESPACE} -f -
+echo "===> Applying RoleBindgins in namespace ${NAMESPACE} ..."
+envsubst < ${SCRIPT_DIR}/../kube-dashboard/rolebinding-kubedash.yaml | kubectl apply -n ${NAMESPACE} -f -
 
-SCRIPT_DIR=$(dirname -- "$(readlink -f "${BASH_SOURCE}")")
 ${SCRIPT_DIR}/get-sa-token.sh ${NAMESPACE} ${SERVICE_ACCT}
