@@ -16,6 +16,6 @@ then
 fi
 
 echo ""
-ARGO_TOKEN="Bearer $(kubectl get secret ${SERVICE_ACCT}-token -n ${NAMESPACE} -o=jsonpath='{.data.token}' | base64 --decode)"
-printf "===> ARGO_TOKEN for SA ${NAMESPACE}:${SERVICE_ACCT}:\n${ARGO_TOKEN}\n"
+TOKEN="$(kubectl get secret ${SERVICE_ACCT}-token -n ${NAMESPACE} -o=jsonpath='{.data.token}' | base64 --decode)"
+printf "===> TOKEN for SA ${NAMESPACE}:${SERVICE_ACCT}:\n${TOKEN}\n"
 echo ""
