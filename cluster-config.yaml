@@ -5,7 +5,7 @@ metadata:
   name: akc # name that you want to give to your cluster (will still be prefixed with `k3d-`)
 servers: 1 # same as `--servers 1`
 agents: 3 # same as `--agents 2`
-image: rancher/k3s:v1.25.4-k3s1 # same as `--image rancher/k3s:v1.20.4-k3s1`
+image: rancher/k3s:v1.25.16-k3s4 # same as `--image rancher/k3s:v1.25.16-k3s4`
 hostAliases: # /etc/hosts style entries to be injected into /etc/hosts in the node containers and in the NodeHosts section in CoreDNS
   - ip: 1.1.1.1
     hostnames:
