@@ -7,9 +7,21 @@ data:
   index.html: |
     <html>
       <title>${APP_NAME}</title>
+      <style>
+      td {
+        border: 4px solid black;
+        border-radius: 10px;
+      }
+      </style>
       <body>
-        </br>
-        <h1>Welcome to ${APP_NAME}</h1>
+        <!--First section-->
+        <div style="background-color: #b2c8eb; height:480px; padding-top:80px;">
+          <table>
+            <tr>
+              <td>*</td><td><h1>Welcome to ${APP_NAME}</h1></td><td>*</td>
+            </tr>
+          </table>
+        </div>
       </body>
     </html>
 
