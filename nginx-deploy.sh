@@ -8,12 +8,15 @@ fi
 
 usage() {
   echo ""
-  echo "Usage: ${0} <app_name>"
+  echo "Usage: ${0} <app_name> [<host_name>]"
   echo "Example: ${0} nginx-1"
+  echo "Note: <host_name> is optional and if not provided will default"
+  echo "  to the output of the hostname command."
   exit 1
 }
 
 export APP_NAME=$1
+export HOST_NAME=$2
 export NAMESPACE=nginx
 
 if [ -z "${APP_NAME}" ]
@@ -22,6 +25,16 @@ then
   usage
 fi
 
+if [ -z "${HOST_NAME}" ]
+then
+  HOST_NAME=$(hostname | awk '{print tolower($0)}')
+  echo "No HOST_NAME provided. Defaulting to: ${HOST_NAME}"
+fi
+
+echo "Provided inputs:"
+echo "  APP_NAME: ${APP_NAME}"
+echo "  HOST_NAME: ${HOST_NAME}"
+
 echo ""
 echo "===> Creating namespace ${NAMESPACE} (if it doesn't exist) ..."
 kubectl get ns | grep -q "^${NAMESPACE} " || kubectl create ns ${NAMESPACE}
@@ -29,5 +42,5 @@ kubectl get ns | grep -q "^${NAMESPACE} " || kubectl create ns ${NAMESPACE}
 echo ""
 echo "===> Deploying nginx \"${APP_NAME}\" in namespace \"${NAMESPACE}\" ..."
 envsubst < k8s/nginx/deployment.yaml | kubectl apply -n ${NAMESPACE} -f -
-envsubst < k8s/nginx/service.yaml | kubectl apply -n ${NAMESPACE} -f -
+envsubst < k8s/nginx/service-cip.yaml | kubectl apply -n ${NAMESPACE} -f -
 envsubst < k8s/nginx/ingress.yaml | kubectl apply -n ${NAMESPACE} -f -
