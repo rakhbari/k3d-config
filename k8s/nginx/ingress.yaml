@@ -15,9 +15,10 @@ metadata:
   name: ${APP_NAME}
 spec:
   entryPoints:
+    - web
     - websecure
   routes:
-    - match: Host(`mainserv03.lan`) && PathPrefix(`/${APP_NAME}`)
+    - match: Host(`${HOST_NAME}`) && PathPrefix(`/${APP_NAME}`)
       kind: Rule
       services:
         - name: ${APP_NAME}
@@ -29,5 +30,5 @@ spec:
       services:
         - name: ${APP_NAME}
           port: 80
-  tls:
-    secretName: akhbari-us-production
+  # tls:
+    # secretName: akhbari-us-production
