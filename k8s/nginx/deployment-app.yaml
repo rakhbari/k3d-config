@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${APP_NAME}
+spec:
+  selector:
+    matchLabels:
+      app: ${APP_NAME}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ${APP_NAME}
+    spec:
+      containers:
+        - name: bootstrap-nginx
+          image: akcn/bootstrap-nginx:latest
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: app-config
+              mountPath: /usr/share/nginx/html/config/
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+            requests:
+              memory: 256Mi
+              cpu: "0.2"
+      volumes:
+        - name: app-config
+          configMap:
+            name: ${APP_NAME}-app-config
