@@ -40,7 +40,8 @@ echo "===> Creating namespace ${NAMESPACE} (if it doesn't exist) ..."
 kubectl get ns | grep -q "^${NAMESPACE} " || kubectl create ns ${NAMESPACE}
 
 echo ""
-echo "===> Deploying nginx \"${APP_NAME}\" in namespace \"${NAMESPACE}\" ..."
-envsubst < k8s/nginx/deployment.yaml | kubectl apply -n ${NAMESPACE} -f -
+echo "===> Deploying nginx app \"${APP_NAME}\" in namespace \"${NAMESPACE}\" ..."
+envsubst < k8s/nginx/configmap-app.yaml | kubectl apply -n ${NAMESPACE} -f -
+envsubst < k8s/nginx/deployment-app.yaml | kubectl apply -n ${NAMESPACE} -f -
 envsubst < k8s/nginx/service-cip.yaml | kubectl apply -n ${NAMESPACE} -f -
 envsubst < k8s/nginx/ingress.yaml | kubectl apply -n ${NAMESPACE} -f -
