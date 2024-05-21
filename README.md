@@ -35,9 +35,10 @@ Before you run the install script, check the `ingress.yaml` file under `k8s/ngin
     - match: Host(`mainserv03.lan`) && PathPrefix(`/${APP_NAME}`)
 ```
 
-Run `nginx-install.sh <nginx-id>` to create a few NginX `Deployment`s, associated `Service`s and `IngressRoute`s as such:
+Run `nginx-deploy.sh <nginx-id> <my-hostname>` to create a few NginX `Deployment`s, associated `Service`s and `IngressRoute`s as such:
+
 ```
-$ ./nginx-install.sh nginx-1
+$ ./nginx-deploy.sh nginx-1 myserver.lan
 ```
 You'll end up with the following CR objects:
 ```
@@ -53,7 +54,7 @@ nginx-1-stripprefix   113m
 NAME
 ingressroute.traefik.containo.us/nginx-1
 ```
-If everything goes well, you should be able to hit your bare metal hostname (or IP address) with `<hostname-or-ip>:9080/nginx-1` and see a dead simple `index.html` page that simply identifies the `<nginx-id>` you enered earlier. Nothing fancy, just an easy test page to show that you can create multiple services & ingress-routes that are externally accessible from anywhere in your network.
+If everything goes well, you should be able to hit your bare metal hostname (or IP address) with `<hostname-or-ip>:9080/nginx-1` and see a  simple `index.html` page that simply identifies the `<nginx-id>` you enered earlier. Nothing fancy, just an easy test page to show that you can create multiple services & ingress-routes that are externally accessible from anywhere in your network.
 
 ## Traefik Dashboard
 
