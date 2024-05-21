@@ -18,6 +18,7 @@ spec:
     - web
     - websecure
   routes:
+    # Rule for serving out the index.html for the configured app with the above Middleware
     - match: Host(`${HOST_NAME}`) && PathPrefix(`/${APP_NAME}`)
       kind: Rule
       services:
@@ -25,7 +26,7 @@ spec:
           port: 80
       middlewares:
         - name: ${APP_NAME}-stripprefix
-    - match: Host(`${APP_NAME}.akhbari.us`)
+    - match: Host(`${APP_NAME}.${HOST_NAME}`)
       kind: Rule
       services:
         - name: ${APP_NAME}
