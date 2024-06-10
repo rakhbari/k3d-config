@@ -25,6 +25,10 @@ then
   usage
 fi
 
+# The given APP_NAME will be used in metadata.name of a few different k8s specs
+# Making sure it doesn't contain spaces and/or other illegal characters
+APP_NAME=$(echo $APP_NAME | tr " "_"'" - | awk '{print tolower($0)}')
+
 if [ -z "${HOST_NAME}" ]
 then
   HOST_NAME=$(hostname | awk '{print tolower($0)}')
